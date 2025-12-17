@@ -111,7 +111,7 @@ jobs:
 
       - name: "echo"
         env:
-          REASONING: ${{ fromJSON(steps.classify-issue.outputs.json) }}
+          REASONING: ${{ toJSON(fromJSON(steps.classify-issue.outputs.json)) }}
         run: echo "Reasoning ---> $REASONING"
 
 
