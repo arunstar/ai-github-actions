@@ -1,0 +1,23 @@
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  generate-text:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: vercel/ai-action@v2
+        id: prompt
+        with:
+          model: "openai/gpt-5"
+          api-key: ${{ secrets.AI_GATEWAY_API_KEY }}
+          prompt: |
+            Is this an urgent issue? Say "yes" if it's preventing a user from doing something critical.
+
+            Issue Title: ${{ github.event.issue.title }}
+
+            Issue Body: ${{ github.event.issue.body }}
+      - if: steps.prompt.outputs.text == 'yes'
+        run: gh issue edit ${{ github.event.issue.html_url }} --add-label urgent
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
