@@ -109,5 +109,11 @@ jobs:
 
             Issue Body: ${{ github.event.issue.body }}
 
+      - name: "echo"
+        env:
+          REASONING: ${{ fromJSON(steps.classify-issue.outputs.json) }}
+        run: echo "Reasoning ---> $REASONING"
+
+
   
 
