@@ -129,21 +129,3 @@ jobs:
           REPO_LABELS: ${{ steps.fetch-labels.outputs.labels_json }}
           USER_LABELS: ${{ toJson(fromJSON(steps.classify-issue.outputs.json).labels) }}
 
-      - name: Apply labels to issue
-        if: fromJSON(steps.classify-issue.outputs.json).confidence > 0.6
-        run: |
-          labels=$LABELS
-          if [ "$labels" != "[]" ]; then
-            gh api /repos/${{ github.repository }}/issues/${{ github.event.issue.number }}/labels \
-              --method POST \
-              --input - <<< "{\"labels\": $labels}"
-            echo "Applied labels: $labels"
-          else
-            echo "No labels to apply"
-          fi
-
-          # Use printf with environment variable to safely log reasoning and prevent command injection
-          printf 'Reasoning: %s\n' "$REASONING"
-        env:
-          REASONING: ${{ fromJSON(steps.classify-issue.outputs.json).reasoning }}
-          LABELS: ${{ steps.filter-labels.outputs.valid_labels }}
