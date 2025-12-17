@@ -17,6 +17,7 @@ jobs:
             Issue Title: ${{ github.event.issue.title }}
 
             Issue Body: ${{ github.event.issue.body }}
+      - run: echo ${{ steps.prompt.outputs.text }}
       - if: steps.prompt.outputs.text == 'yes'
         run: gh issue edit ${{ github.event.issue.html_url }} --add-label urgent
         env:
